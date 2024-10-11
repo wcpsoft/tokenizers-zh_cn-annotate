@@ -1,9 +1,13 @@
-<p align="center">
+# 介绍
+本项目是对huggingface的tokenizers源码的阅读分析并增加中文注解，以便帮助大家更好的理解tokenizers的源码。
+为了更好的阅读，我将删除官方源码中不需要的内容，如授权文件、文档目录等，以及其他语言调用的桥接层SDK的源码。专注于tokenizers核心源码实现的阅读。
+详细关于tokenizers的文档请见：[官方文档](https://huggingface.co/docs/tokenizers/intro)  或者访问我的使用翻译笔记：[翻译笔记](https://github.com/wcpsoft/huggingface-tokenizers-rust-zh_cn-doc)
+<p>
     <br>
     <img src="https://huggingface.co/landing/assets/tokenizers/tokenizers-logo.png" width="600"/>
     <br>
 <p>
-<p align="center">
+<p>
     <img alt="Build" src="https://github.com/huggingface/tokenizers/workflows/Rust/badge.svg">
     <a href="https://github.com/huggingface/tokenizers/blob/main/LICENSE">
         <img alt="GitHub" src="https://img.shields.io/github/license/huggingface/tokenizers.svg?color=blue&cachedrop">
@@ -13,67 +17,14 @@
     </a>
 </p>
 
-Provides an implementation of today's most used tokenizers, with a focus on performance and
-versatility.
+tokenizers是开源的分词库，提供了当今最常用的分词器的实现。
 
-## Main features:
+## 主要功能:
 
- - Train new vocabularies and tokenize, using today's most used tokenizers.
- - Extremely fast (both training and tokenization), thanks to the Rust implementation. Takes
-   less than 20 seconds to tokenize a GB of text on a server's CPU.
- - Easy to use, but also extremely versatile.
- - Designed for research and production.
- - Normalization comes with alignments tracking. It's always possible to get the part of the
-   original sentence that corresponds to a given token.
- - Does all the pre-processing: Truncate, Pad, add the special tokens your model needs.
+- 使用当今最常用的分词器训练新的词汇表并进行分词。
+- 由于采用了Rust实现，以极快的速度完成包括训练和分词等功能，支持在设备上使用CPU进行处理，1GB文本所需时间不到20秒。
+- 易于使用，同时非常多功能。
+- 专为研究和生产设计。
+- 可以正则化过程中会跟踪对齐信息。始终可以获取对应于给定令牌的原始句子部分。
+- 可以完成所有预处理工作：截断、填充、添加模型所需的特殊令牌等。
 
-## Performances
-Performances can vary depending on hardware, but running the [~/bindings/python/benches/test_tiktoken.py](bindings/python/benches/test_tiktoken.py) should give the following on a g6 aws instance:
-![image](https://github.com/user-attachments/assets/2b913d4b-e488-4cbc-b542-f90a6c40643d)
-
-
-## Bindings
-
-We provide bindings to the following languages (more to come!):
-  - [Rust](https://github.com/huggingface/tokenizers/tree/main/tokenizers) (Original implementation)
-  - [Python](https://github.com/huggingface/tokenizers/tree/main/bindings/python)
-  - [Node.js](https://github.com/huggingface/tokenizers/tree/main/bindings/node)
-  - [Ruby](https://github.com/ankane/tokenizers-ruby) (Contributed by @ankane, external repo)
- 
-## Quick example using Python:
-
-Choose your model between Byte-Pair Encoding, WordPiece or Unigram and instantiate a tokenizer:
-
-```python
-from tokenizers import Tokenizer
-from tokenizers.models import BPE
-
-tokenizer = Tokenizer(BPE())
-```
-
-You can customize how pre-tokenization (e.g., splitting into words) is done:
-
-```python
-from tokenizers.pre_tokenizers import Whitespace
-
-tokenizer.pre_tokenizer = Whitespace()
-```
-
-Then training your tokenizer on a set of files just takes two lines of codes:
-
-```python
-from tokenizers.trainers import BpeTrainer
-
-trainer = BpeTrainer(special_tokens=["[UNK]", "[CLS]", "[SEP]", "[PAD]", "[MASK]"])
-tokenizer.train(files=["wiki.train.raw", "wiki.valid.raw", "wiki.test.raw"], trainer=trainer)
-```
-
-Once your tokenizer is trained, encode any text with just one line:
-```python
-output = tokenizer.encode("Hello, y'all! How are you 😁 ?")
-print(output.tokens)
-# ["Hello", ",", "y", "'", "all", "!", "How", "are", "you", "[UNK]", "?"]
-```
-
-Check the [documentation](https://huggingface.co/docs/tokenizers/index)
-or the [quicktour](https://huggingface.co/docs/tokenizers/quicktour) to learn more!
